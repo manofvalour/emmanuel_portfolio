@@ -7,239 +7,198 @@ const investigations = [
       "Built a 7-agent pipeline stacking every known technique — HyDE, multi-query, reranking, parallel generation, consensus, verification. Then benchmarked 16 configurations across 432 runs and found half of it wasn't earning its place. The winning setup is smaller than what I built.",
     tags: ['Reranker', 'HyDE', 'RAGAS eval', '432-run benchmark'],
     caseStudy: {
-      title: 'Multi-Agent RAG: Benchmarking My Own Assumptions',
+      title: 'Benchmarking My Own Assumptions: A 7-Agent RAG System That Got Smaller After 432 Experiments',
 
-      intro:
-        "I built a 7-agent RAG system on one idea: if you stack every known technique for reducing hallucination — HyDE, multi-query expansion, reranking, parallel generation with consensus, a verification pass — the system should get more reliable, not less. More retrieval quality, less hallucination. That was the theory.",
+      hook: 'If more techniques reduce hallucination, stacking them should make the system more reliable.',
 
-      stack: {
-        heading: 'Stack',
-        items: [
-          'Embeddings: all-MiniLM-L6-v2 (384-dim)',
-          'Vector store: Qdrant (HNSW, cosine similarity)',
-          'Reranker: jinaai/jina-reranker-v3 (cross-encoder)',
-          'Generation: Groq, openai/gpt-oss-120b',
-          'Judging: RAGAS scored via Gemini; grounding judge via Groq',
-        ],
+      intro: [
+        "I built a retrieval-augmented generation system around that idea. The resulting system had seven agents. HyDE and multi-query expansion improved retrieval. A reranker narrowed the context. Multiple generators produced candidate answers. A consensus stage selected an answer, followed by verification and confidence scoring.",
+        "It looked like a stronger system. I wasn't sure it was a better one. So I stopped adding components and benchmarked the architecture I had built.",
+      ],
+
+      problem: {
+        heading: 'Problem',
+        body: "The system had accumulated several techniques for improving retrieval and reducing hallucination: HyDE query expansion, multi-query expansion, reranking, parallel generation, consensus, claim verification, confidence scoring. Each had a reasonable justification in isolation. The problem was that I didn't know which ones were actually earning their place in the pipeline. More components meant more LLM calls, more latency, more failure modes, and more complexity to maintain.",
+        question: 'Which configuration gives me the best trade-off between answer quality and latency?',
       },
 
-      whatIBuilt: {
-        heading: 'What I built',
-        body: "A 7-agent pipeline: dual query expansion (HyDE + multi-query) feeds retrieval, a reranker agent narrows the chunks, an odd number of models generate in parallel, a consensus agent picks the best answer, and a verification agent checks it's grounded before it ships.",
-        architecture: [
-          'Cache',
-          'Query Expansion (HyDE + multi-query)',
-          'Chunk Retrieval (top 18)',
-          'Reranker Agent (narrows to top 5)',
-          'Consensus Agent (1 or 3 parallel generators)',
-          'Claim Verification',
-          'Confidence Scoring',
-          'Response (+ cache + RAGAS eval)',
+      hypothesis: {
+        heading: 'Hypothesis',
+        statement: 'Adding more retrieval and generation safeguards should improve answer quality enough to justify their additional cost.',
+        predictions: [
+          'The reranker will improve quality at some latency cost.',
+          'Three generators will produce better answers than one.',
+          'More query variants will improve retrieval.',
+          'Combining HyDE and multi-query will be safer than either alone.',
         ],
+        closing: "I also had a custom grounding score I expected to provide a useful signal for measuring whether answers were supported by retrieved evidence. These were assumptions. The benchmark was designed to test them.",
       },
 
-      experimentDesign: {
-        heading: 'Experiment design',
-        body: 'To find out which of these techniques actually earned their place, I ran a full factorial benchmark: every combination of three levers, tested against the same fixed set of 27 queries.',
+      experiment: {
+        heading: 'Experiment',
+        body: 'I converted the architecture into a full-factorial experiment, varying three factors:',
         factorsTable: {
           headers: ['Factor', 'Levels'],
           rows: [
             ['Reranker', 'ON / OFF'],
-            ['Consensus generators', '1 / 3'],
-            ['Query expansion', 'both / hyde / multi_query / off'],
+            ['Generators', '1 / 3'],
+            ['Query expansion', 'HyDE / multi-query / both / off'],
           ],
         },
-        workload:
-          '2 × 2 × 4 = 16 configurations, each run against all 27 queries — 432 query runs total. Measured latency (mean, median, p95, max) and RAGAS quality metrics (faithfulness, answer relevancy, context precision, context recall) alongside claim support, confidence, and a hallucination-risk label.',
-      },
-
-      unmeasuredCalls: {
-        heading: 'Two calls I made without data',
-        items: [
-          'Cut parallel generators from 5 to 3 — cost and latency weren\u2019t worth the fifth model.',
-          'Swapped a strong reranker for a smaller one — output looked about the same, so I called it a wash.',
-        ],
-        closing: 'Both reasonable. Neither measured.',
-      },
-
-      benchmark: {
-        heading: 'The benchmark',
-        body: 'Full factorial test: reranker on/off × 1 or 3 generators × 4 expansion strategies. 16 configs, 27 queries each, 432 runs. Measured latency and RAGAS quality metrics.',
-        gradingNote:
-          "I'd also built a custom grounding judge — my proudest piece. The benchmark found it broken: a regex parser meant to extract a 1–5 grade was instead capturing stray digits inside larger numbers, and coercing any answer it couldn't parse to the worst possible grade. 314 of 432 answers (73%) landed on a flat 1.0, with a mean of 1.61/5. Its correlation with actual faithfulness: 0.091 — statistically indistinguishable from zero. Excluded it from ranking entirely. Measure it, or you don't know.",
-        groundingChart: {
-          src: '/images/rag-benchmark/grounding_vs_faithfulness.png',
-          alt: 'Left: grounding grade distribution flat at 1.0. Right: faithfulness vs grounding scatter showing no relationship.',
-          caption: 'Grounding judge output: flat distribution, zero correlation with RAGAS faithfulness.',
+        workload: '16 configurations, each answering the same 27 evaluation queries: 16 × 27 = 432 runs.',
+        metrics: {
+          performance: ['Mean latency', 'Median latency', 'P95 latency', 'Maximum latency'],
+          quality: ['Faithfulness', 'Answer relevancy', 'Context precision', 'Context recall', 'Claim support'],
+          diagnostics: ['Hallucination risk', 'Custom grounding score'],
         },
+        closing: "For the final ranking, I combined normalized latency and quality into a balanced composite score, then checked the Pareto frontier and ran a weight sweep to make sure the result wasn't caused by one arbitrary weighting choice.",
       },
 
       results: {
         heading: 'Results',
+        intro: 'The three factors I varied — reranker, generators, and query expansion — had very different effects on latency, and only a marginal effect on quality:',
+        leverChart: {
+          src: '/images/rag-benchmark/per_lever_analysis.png',
+          alt: 'Six-panel grid showing average latency, relevancy, and recall broken out by each lever independently.',
+          caption: 'Main effects: how each lever moves latency, relevancy, and recall in isolation.',
+        },
 
-        latency: {
-          intro:
-            'Latency here is dominated by external LLM API time, so median and p95 matter more than the mean. Sorted fastest to slowest by median:',
+        reranker: {
+          heading: '1. The reranker was the biggest lever',
+          body: 'I expected the reranker to cost latency, since it added another model call. Instead, it did the opposite: average latency fell from 16.6s to 9.2s when enabled — roughly a 45% reduction. Reranking also improved context precision and claim support without reducing faithfulness.',
           table: {
-            headers: ['Config', 'Reranker', 'Gen', 'Expansion', 'Median (ms)', 'P95 (ms)'],
+            headers: ['Reranker', 'Average latency'],
             rows: [
-              ['D', 'ON', '3', 'off', '4,143', '9,232'],
-              ['H', 'ON', '1', 'off', '4,246', '19,505'],
-              ['J', 'OFF', '3', 'hyde', '4,716', '13,222'],
-              ['F', 'ON', '1', 'hyde', '5,427', '12,958'],
-              ['E', 'ON', '1', 'both', '5,564', '11,957'],
-              ['C', 'ON', '3', 'multi_query', '5,867', '8,481'],
-              ['I', 'OFF', '3', 'both', '6,961', '44,925'],
-              ['B', 'ON', '3', 'hyde', '7,036', '54,397'],
-              ['A', 'ON', '3', 'both', '8,277', '21,876'],
-              ['P', 'OFF', '1', 'off', '8,957', '28,253'],
-              ['G', 'ON', '1', 'multi_query', '12,312', '28,301'],
-              ['L', 'OFF', '3', 'off', '15,992', '46,988'],
-              ['K', 'OFF', '3', 'multi_query', '16,031', '28,625'],
-              ['O', 'OFF', '1', 'multi_query', '17,098', '30,593'],
-              ['M', 'OFF', '1', 'both', '20,581', '51,353'],
-              ['N', 'OFF', '1', 'hyde', '21,193', '39,499'],
+              ['ON', '9,175 ms'],
+              ['OFF', '16,628 ms'],
             ],
           },
+          explanation: "Retrieval initially produced up to 18 chunks. The reranker narrowed those to 5. The additional ranking step was cheaper than making the generator process a larger, noisier context. The reranker wasn't just a quality component — it reduced the amount of work the generator had to do.",
           chart: {
             src: '/images/rag-benchmark/per_config_latency.png',
             alt: 'Bar chart of median latency per configuration with P95 tail markers.',
-            caption: 'Median latency (bars) vs P95 tail (dots) across all 16 configurations.',
-          },
-          mainEffectsTable: {
-            headers: ['Lever', 'Level', 'Avg latency (ms)'],
-            rows: [
-              ['Reranker', 'ON', '9,175'],
-              ['Reranker', 'OFF', '16,628'],
-              ['Generators', '1', '13,908'],
-              ['Generators', '3', '11,895'],
-              ['Expansion', 'off', '10,864'],
-              ['Expansion', 'hyde', '12,094'],
-              ['Expansion', 'both', '14,252'],
-              ['Expansion', 'multi_query', '14,398'],
-            ],
-          },
-          mainEffectsChart: {
-            src: '/images/rag-benchmark/per_lever_analysis.png',
-            alt: 'Six-panel grid showing average latency, relevancy, and recall broken out by each lever independently.',
-            caption: 'Main effects: how each lever moves latency, relevancy, and recall in isolation.',
+            caption: "Latency per config (median vs. P95 tail) — reranker-ON configs cluster at the low end on both.",
           },
         },
 
-        quality: {
-          intro: 'RAGAS quality metrics, normalized 0–1, per configuration:',
-          chart: {
-            src: '/images/rag-benchmark/ragas_quality.png',
-            alt: 'Grouped bar chart of faithfulness, answer relevancy, context precision, and context recall per configuration.',
-            caption: 'RAGAS quality metrics across all 16 configurations.',
-          },
+        expansion: {
+          heading: '2. More query expansion was not better',
+          body: 'I expected additional query formulations to improve retrieval coverage. The benchmark showed diminishing returns.',
           table: {
-            headers: ['Config', 'Faithfulness', 'Relevancy', 'Precision', 'Recall', 'Claim Support', 'Quality'],
+            headers: ['Expansion', 'Average latency'],
             rows: [
-              ['F', '1.000', '0.882', '0.943', '0.981', '0.695', '0.900'],
-              ['H', '0.953\u20131.000', '0.878', '0.857', '1.000', '0.561', '0.859'],
-              ['D', '1.000', '0.884', '0.832', '1.000', '0.562', '0.855'],
-              ['G', '0.994', '0.848', '0.892', '0.944', '0.565', '0.849'],
-              ['B', '0.977', '0.893', '0.904', '0.982', '0.486', '0.848'],
-              ['A', '0.951', '0.829', '0.876', '0.944', '0.553', '0.831'],
+              ['Off', '10,864 ms'],
+              ['HyDE', '12,094 ms'],
+              ['Both', '14,252 ms'],
+              ['Multi-query', '14,398 ms'],
             ],
           },
+          body2: 'HyDE provided the strongest retrieval-quality trade-off. Multi-query increased latency without a meaningful precision or recall improvement. Combining both added even more latency and produced the worst faithfulness among the expansion strategies.',
+          surprise: "I assumed more query variants → more retrieved evidence → better answers. The data suggested something more nuanced: more query variants → more retrieval work, unless the additional queries actually produce better evidence. I wouldn't treat retrieval techniques as additive improvements — their value depends on what the rest of the pipeline is already doing.",
+        },
+
+        generators: {
+          heading: '3. Three generators barely justified their cost',
+          body: 'The system used parallel generation and consensus because I expected multiple independent answers to make the final answer more reliable. There was a small improvement in context recall — 0.979 with one generator, 0.983 with three — but small relative to the extra generation work. The overall winning configuration used one generator.',
+          closing: "That changed how I thought about the consensus stage. It wasn't necessarily wrong. It just wasn't earning its cost in this workload.",
+        },
+
+        groundingMetric: {
+          heading: '4. My grounding metric was broken',
+          body: "This was the most important failure in the experiment. I'd built a custom LLM-based grounding judge scoring answers 1–5, intended as a primary signal for hallucination. Instead: 314 of 432 answers (73%) received the worst possible score. Mean was 1.61/5. The Spearman correlation with RAGAS faithfulness was approximately ρ = 0.091 — essentially no relationship.",
+          chart: {
+            src: '/images/rag-benchmark/grounding_vs_faithfulness.png',
+            alt: 'Left: grounding grade distribution flat at 1.0. Right: faithfulness vs grounding scatter showing no relationship.',
+            caption: 'Grounding judge output: flat distribution, zero correlation with RAGAS faithfulness.',
+          },
+          rootCause: 'A parser bug: a raw digit regex was extracting digits from larger numbers, while arbitrary-format failures were coerced to the worst score.',
+          lesson: "A metric can look sophisticated and still be useless. I had a custom judge, a numerical score, a seemingly objective measurement — but the pipeline underneath it was broken. I excluded grounding from the ranking. That wasn't a failure of the benchmark. Finding the broken metric was one of the results.",
         },
 
         hallucinationRisk: {
-          intro:
-            "The pipeline's own hallucination-risk label told a different story than the quality metrics. Every reranker=ON config carried more HIGH-risk flags than nearly every reranker=OFF config — while also scoring higher on claim support.",
+          heading: "5. The pipeline's hallucination-risk label also disagreed with the quality metrics",
+          body: 'I tracked a LOW / MEDIUM / HIGH hallucination-risk label produced by the pipeline, expecting configs with better factual quality to show lower risk. Instead, reranked configurations often showed more HIGH risk labels despite higher claim support and similar or better faithfulness.',
+          example: 'Configuration F — the eventual winner — had 16 LOW, 6 MEDIUM, 5 HIGH.',
           chart: {
             src: '/images/rag-benchmark/hallucination_risk_mix.png',
             alt: 'Stacked bar chart of LOW/MEDIUM/HIGH hallucination risk labels per configuration.',
-            caption: 'Hallucination risk mix per config \u2014 reranker=ON configs (A\u2013H) show more HIGH flags despite higher measured faithfulness.',
+            caption: 'Hallucination risk mix per config — reranker-ON configs (A–H) show more HIGH flags despite stronger factual quality.',
           },
-          table: {
-            headers: ['Config', 'LOW', 'MED', 'HIGH', 'Low fraction'],
-            rows: [
-              ['F', '16', '6', '5', '0.593'],
-              ['H', '12', '7', '8', '0.444'],
-              ['D', '11', '8', '8', '0.407'],
-              ['P', '11', '16', '0', '0.407'],
-              ['I\u2013O (mostly OFF)', '8\u201310', '16\u201319', '0\u20132', '0.296\u20130.370'],
-            ],
-          },
-          closing:
-            "This is the second broken measurement the benchmark surfaced: the risk label disagrees with the factual quality metrics badly enough that it shouldn't be trusted for ranking either.",
+          closing: "That told me the pipeline's heuristic hallucination label wasn't reliable enough for model selection. Again, the lesson was about measurement quality, not just model quality.",
         },
       },
 
-      findings: {
-        heading: 'What the data said — and where I was wrong',
-        rows: [
-          {
-            assumption: 'Reranker swap trades quality for speed',
-            reality: 'It wins on both — 45% faster, higher quality',
-          },
-          {
-            assumption: '3 generators justify their cost',
-            reality: '1 generator wins; consensus overhead barely helps recall',
-          },
-          {
-            assumption: 'More query variants = better retrieval',
-            reality: 'Multi-query adds latency, zero precision/recall gain',
-          },
-          {
-            assumption: 'Combining HyDE + multi-query is safest',
-            reality: "It's the worst config for faithfulness",
-          },
-        ],
-        closing: 'HyDE alone, paired with the reranker, was the actual best performer.',
-      },
-
-      paretoAndComposite: {
-        heading: 'Balanced ranking & Pareto frontier',
-        body:
-          'A composite score (50% latency, 50% quality) ranks all 16 configs. To make sure the winner wasn\u2019t a coincidence of that 50/50 weighting, I swept the latency weight from 0.3 to 0.9 \u2014 the top config held at three of four weights.',
-        paretoChart: {
-          src: '/images/rag-benchmark/pareto_frontier.png',
-          alt: 'Scatter plot of median latency vs quality with a Pareto frontier line connecting non-dominated configs.',
-          caption: 'Speed vs quality Pareto frontier \u2014 configs D, H, and F sit on the frontier.',
-        },
-        compositeTable: {
-          headers: ['Rank', 'Config', 'Composite score'],
+      winner: {
+        heading: 'Which configuration actually won?',
+        body: 'After measuring the individual effects, I ranked all 16 configurations using a balanced objective: 50% latency, 50% quality.',
+        rankingTable: {
+          headers: ['Rank', 'Configuration', 'Composite'],
           rows: [
-            ['1', 'F \u2014 ON \u00b7 1 \u00b7 hyde', '0.962'],
-            ['2', 'H \u2014 ON \u00b7 1 \u00b7 off', '0.726'],
-            ['3', 'D \u2014 ON \u00b7 3 \u00b7 off', '0.697'],
-            ['4', 'C \u2014 ON \u00b7 3 \u00b7 multi_query', '0.650'],
-            ['5', 'J \u2014 OFF \u00b7 3 \u00b7 hyde', '0.581'],
+            ['1', 'F — Reranker ON · 1 generator · HyDE', '0.962'],
+            ['2', 'H — Reranker ON · 1 generator · Off', '0.726'],
+            ['3', 'D — Reranker ON · 3 generators · Off', '0.697'],
+            ['4', 'C — Reranker ON · 3 generators · Multi-query', '0.650'],
+            ['5', 'J — Reranker OFF · 3 generators · HyDE', '0.581'],
           ],
         },
         compositeChart: {
           src: '/images/rag-benchmark/pareto_frontier_and_composite.png',
           alt: 'Horizontal bar chart of balanced composite score per configuration.',
-          caption: 'Balanced composite score per configuration, as generated in the analysis notebook.',
+          caption: 'Balanced composite score per configuration.',
         },
+        qualityNote: "Before trusting that ranking, it's worth checking the raw RAGAS quality metrics the composite is actually built from:",
+        qualityChart: {
+          src: '/images/rag-benchmark/ragas_quality.png',
+          alt: 'Grouped bar chart of faithfulness, answer relevancy, context precision, and context recall per configuration.',
+          caption: 'RAGAS quality metrics across all 16 configurations.',
+        },
+        paretoNote: "The result wasn't simply 'F has the highest score' — I also checked the speed vs. quality Pareto frontier.",
+        paretoChart: {
+          src: '/images/rag-benchmark/pareto_frontier.png',
+          alt: 'Scatter plot of median latency vs quality with a Pareto frontier line connecting non-dominated configs.',
+          caption: 'Pareto-optimal configs: D (fastest), H (middle ground), F (highest quality).',
+        },
+        closing: 'F remained the winner across three of four latency/quality weightings, only losing to D when the objective became heavily latency-dominated. That gave me more confidence the recommendation wasn\u2019t just an artifact of a 50/50 weighting.',
       },
 
-      outcome: {
-        heading: 'Where it lands',
-        body: "The winning config is smaller than what I built — reranker on, one generator, HyDE-only. The repo still shows the full original architecture; that's deliberate, it's the honest record of what I tested against. I'm updating the live pipeline to match the benchmark now.",
-        conclusionTable: {
-          headers: ['Criterion', 'Winner', 'Value'],
+      finalDecision: {
+        heading: 'The final decision',
+        body: 'The configuration I would ship: Reranker ON + 1 generator + HyDE.',
+        table: {
+          headers: ['Objective', 'Configuration', 'Result'],
           rows: [
-            ['Fastest (median latency)', 'D \u2014 ON \u00b7 3 \u00b7 off', '4,143 ms'],
-            ['Highest quality', 'F \u2014 ON \u00b7 1 \u00b7 hyde', 'Quality score 0.900'],
-            ['Balanced latency + quality', 'F \u2014 ON \u00b7 1 \u00b7 hyde', 'Composite 0.962'],
+            ['Fastest', 'D — ON · 3 · off', '4,142 ms median'],
+            ['Highest quality', 'F — ON · 1 · HyDE', '0.900 quality'],
+            ['Balanced', 'F — ON · 1 · HyDE', '0.962 composite'],
           ],
         },
+        closing: 'The winning system is smaller than the system I originally built. That\u2019s the result I cared about most.',
       },
 
-      caveats: {
-        heading: 'Caveats',
-        body:
-          'Latency includes external LLM API variability and retries, so absolute timings are lab-specific rather than universal. The benchmark ran a fixed set of 27 queries \u2014 the reranker effect is the strongest, most repeatable finding here; conclusions on the smaller-margin comparisons should be revalidated on a larger, more diverse query set before treating them as settled.',
+      explanation: {
+        heading: 'Explanation',
+        body: [
+          "The original architecture was based on a reasonable intuition: if one technique helps, several should help more. The benchmark showed why that intuition was incomplete — the techniques interact.",
+          "A better reranker reduced the amount of irrelevant context reaching the generator, making the system faster despite adding another processing stage. Once retrieval improved, adding more generators provided little additional value. Similarly, more query expansion strategies increased retrieval work without a corresponding improvement in useful evidence.",
+          "The individual techniques weren't necessarily bad — their marginal value changed once other components were present. That's why testing each component in isolation wouldn't have been enough. I needed to test the combinations.",
+          "The experiment also changed how I think about evaluation. My custom grounding metric looked useful until I compared it against an established quality signal. The pipeline's hallucination-risk label similarly disagreed with the factual quality metrics. So the benchmark didn't just answer which architecture is best — it also answered which measurements I can trust when making that decision.",
+        ],
       },
 
       nextTime: {
-        heading: 'What I\u2019d do differently',
-        body: "If I did it again, I'd build the measurement harness before adding the fourth technique, not after the seventh. \u201cMore techniques\u201d was a hypothesis I let run for a long time before I ever checked it.",
+        heading: "What I'd do differently",
+        body: "I would build the measurement harness before adding the fourth technique. I spent too much time making the system more sophisticated before proving I could reliably measure whether the sophistication was helping. If I repeated the project, I'd change the order:",
+        steps: [
+          'Define the engineering question.',
+          'Build the evaluation harness.',
+          'Validate every metric on manually inspected examples.',
+          'Establish a simple baseline.',
+          'Add one architectural lever at a time.',
+          'Run the factorial benchmark once the measurement pipeline is trustworthy.',
+          'Use the benchmark to decide what belongs in the production architecture.',
+        ],
+        closing: "I'd also add automated tests around every custom evaluator and parser before using its output in model selection. The grounding metric was the clearest example — a sophisticated judge undone by a small parsing bug.",
+        lesson: 'Measurement is part of the system. And the broader lesson is simpler: I don\u2019t want to build the most sophisticated RAG system I can. I want to know which complexity earns its place.',
       },
     },
   },

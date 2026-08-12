@@ -17,3 +17,21 @@
 .orderedList li {
   margin-bottom: 6px;
 }
+
+.hook {
+  font-family: var(--font-serif), serif;
+  font-style: italic;
+  font-size: 20px;
+  line-height: 1.6;
+  color: var(--color-main);
+  border-left: 2px solid var(--color-accent);
+  padding-left: 20px;
+  margin: 24px 0 32px;
+}
+
+.question {
+  font-family: var(--font-mono), monospace;
+  font-size: 14px;
+  color: var(--color-accent);
+  margin: 16px 0;
+}

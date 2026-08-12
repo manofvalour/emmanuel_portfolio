@@ -8,6 +8,16 @@
   --color-accent: #B08D57;
 }
 
+[data-theme='dark'] {
+  --color-main: #8FA8CC;
+  --color-text: #E9E7E0;
+  --color-bg: #14181F;
+  --color-bg-tint: #1C222C;
+  --color-hairline: #2A303C;
+  --color-muted: #8B8880;
+  --color-accent: #C79762;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -20,6 +30,7 @@ body {
   font-family: var(--font-serif), Georgia, serif;
   font-size: 16px;
   line-height: 1.65;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 h1, h2, h3 {

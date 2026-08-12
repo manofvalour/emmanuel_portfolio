@@ -1,4 +1,5 @@
 import { IBM_Plex_Sans, IBM_Plex_Serif, IBM_Plex_Mono } from 'next/font/google';
+import Header from '../components/Header';
 import '../styles/globals.css';
 
 const plexSans = IBM_Plex_Sans({
@@ -25,6 +26,7 @@ const plexMono = IBM_Plex_Mono({
 export default function App({ Component, pageProps }) {
   return (
     <div className={`${plexSans.variable} ${plexSerif.variable} ${plexMono.variable}`}>
+      <Header />
       <Component {...pageProps} />
     </div>
   );

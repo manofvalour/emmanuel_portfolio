@@ -46,7 +46,7 @@ export default function Contact() {
   }
 
   return (
-    <section className={styles.contact}>
+    <section id="contact" className={styles.contact}>
       <div className={styles.container}>
         <p className={styles.eyebrow}>Contact</p>
         <h2 className={styles.heading}>Let&apos;s talk trade-offs</h2>

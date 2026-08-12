@@ -1,0 +1,19 @@
+.subheading {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-main);
+  margin-top: 32px;
+  margin-bottom: 12px;
+}
+
+.orderedList {
+  margin: 0 0 16px 20px;
+  font-family: var(--font-mono), monospace;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  color: var(--color-text);
+}
+
+.orderedList li {
+  margin-bottom: 6px;
+}

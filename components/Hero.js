@@ -6,9 +6,11 @@ export default function Hero() {
     <section className={styles.hero}>
       <div className={styles.container}>
         <div className={styles.copy}>
-          <p className={styles.eyebrow}>Portfolio — ML Systems Engineering</p>
-          <h1 className={styles.name}>Emmanuel Ajala</h1>
-          <p className={styles.role}>Reproducible benchmarks for ML systems decisions</p>
+          <p className={styles.eyebrow}>Proof Statement</p>
+
+          <h1 className={styles.claim}>
+            A benchmark should tell the truth, not flatter a favorite.
+          </h1>
 
           <p className={styles.proof}>
             I design reproducible benchmark experiments that help ML engineers make{' '}
@@ -18,16 +20,18 @@ export default function Hero() {
             under real-world constraints.
           </p>
           <p className={styles.proof}>
-            If your team makes engineering decisions from evidence rather 
+            If your team makes engineering decisions from evidence rather
             than intuition, I&apos;d like to contribute.
+          </p>
+
+          <p className={styles.oneLiner}>
+            A CV and LinkedIn can show what I&apos;ve studied and built — this portfolio
+            exists to make how I think observable.
           </p>
 
           <div className={styles.ctaRow}>
             <Link href="/#work" className={styles.cta}>
-              View investigations
-            </Link>
-            <Link href="#method" className={styles.ctaSecondary}>
-              Read the methodology →
+              View the work →
             </Link>
           </div>
         </div>

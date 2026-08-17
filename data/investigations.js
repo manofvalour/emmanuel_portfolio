@@ -6,6 +6,11 @@ const investigations = [
     summary:
       "Built a 7-agent pipeline stacking every known technique — HyDE, multi-query, reranking, parallel generation, consensus, verification. Then benchmarked 16 configurations across 432 runs and found half of it wasn't earning its place. The winning setup is smaller than what I built.",
     tags: ['Reranker', 'HyDE', 'RAGAS eval', '432-run benchmark'],
+    previewChart: {
+      src: '/images/rag-benchmark/pareto_frontier.png',
+      alt: 'Scatter plot of median latency vs quality with a Pareto frontier line connecting non-dominated configs.',
+      caption: 'Pareto-optimal configs: D (fastest), H (middle ground), F (highest quality).',
+    },
     caseStudy: {
       title: 'Benchmarking My Own Assumptions: A 7-Agent RAG System That Got Smaller After 432 Experiments',
 
@@ -58,7 +63,7 @@ const investigations = [
         heading: 'Results',
         intro: 'The three factors I varied — reranker, generators, and query expansion — had very different effects on latency, and only a marginal effect on quality:',
         leverChart: {
-          src: '/images/rag-benchmark/per_lever_analysis.png',
+          src: '/images/rag-benchmark/per_lever_analysis.png/',
           alt: 'Six-panel grid showing average latency, relevancy, and recall broken out by each lever independently.',
           caption: 'Main effects: how each lever moves latency, relevancy, and recall in isolation.',
         },

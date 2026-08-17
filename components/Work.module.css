@@ -1,10 +1,10 @@
 .work {
-  padding: 88px 24px;
+  padding: 45px 24px 88px;
   border-bottom: 1px solid var(--color-hairline);
 }
 
 .container {
-  max-width: 900px;
+  max-width: 1180px;
   margin: 0 auto;
 }
 
@@ -24,6 +24,10 @@
   letter-spacing: -0.01em;
   color: var(--color-main);
   margin-bottom: 48px;
+}
+
+.featured {
+  margin-bottom: 24px;
 }
 
 .grid {

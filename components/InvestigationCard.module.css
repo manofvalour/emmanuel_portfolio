@@ -4,8 +4,26 @@
   border: 1px solid var(--color-hairline);
   border-radius: 4px;
   padding: 28px;
-  text-decoration: none;
   color: inherit;
+}
+
+.cardFeatured {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 40px;
+  align-items: start;
+  background-color: var(--color-bg-tint);
+  border: 1px solid var(--color-hairline);
+  border-left: 3px solid var(--color-accent);
+  border-radius: 4px;
+  padding: 40px;
+  color: inherit;
+}
+
+@media (max-width: 880px) {
+  .cardFeatured {
+    grid-template-columns: 1fr;
+  }
 }
 
 .title {
@@ -13,6 +31,10 @@
   font-weight: 600;
   color: var(--color-main);
   margin-bottom: 6px;
+}
+
+.cardFeatured .title {
+  font-size: 22px;
 }
 
 .subtitle {
@@ -30,6 +52,10 @@
   line-height: 1.65;
   color: var(--color-text);
   margin-bottom: 20px;
+}
+
+.cardFeatured .summary {
+  font-size: 17px;
 }
 
 .tags {
@@ -58,8 +84,51 @@
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--color-main);
+  text-decoration: none;
 }
 
-.card:hover .link {
+.link:hover {
   text-decoration: underline;
+}
+
+.footerLine {
+  font-family: var(--font-mono), monospace;
+  font-size: 11.5px;
+  color: var(--color-muted);
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--color-hairline);
+}
+
+.footerLink {
+  color: var(--color-muted);
+  text-decoration: underline;
+}
+
+.footerLink:hover {
+  color: var(--color-main);
+}
+
+.chartCol {
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-hairline);
+  border-radius: 4px;
+  padding: 20px;
+}
+
+.chartImage {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 2px;
+}
+
+.chartCaption {
+  font-family: var(--font-mono), monospace;
+  font-size: 11.5px;
+  color: var(--color-muted);
+  line-height: 1.6;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--color-hairline);
 }

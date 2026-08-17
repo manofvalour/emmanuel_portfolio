@@ -39,14 +39,14 @@
 }
 
 .currently {
-  margin-top: 48px;
-  padding-top: 32px;
+  margin-top: 35px;
+  padding-top: 28px;
   border-top: 1px solid var(--color-hairline);
 }
 
 .currentlyLabel {
   font-family: var(--font-mono), monospace;
-  font-size: 11.5px;
+  font-size: 11.0px;
   letter-spacing: 0.05em;
   text-transform: uppercase;
   color: var(--color-muted);
@@ -58,6 +58,41 @@
   flex-wrap: wrap;
   gap: 8px;
   list-style: none;
+}
+
+.links {
+  display: flex;
+  gap: 24px;
+  margin-top: 32px;
+}
+
+.linkItem {
+  font-family: var(--font-mono), monospace;
+  font-size: 12.5px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-main);
+  text-decoration: none;
+}
+
+.linkItem:hover {
+  text-decoration: underline;
+}
+
+.cta {
+  display: inline-block;
+  font-family: var(--font-mono), monospace;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-main);
+  margin-top: 40px;
+  padding-top: 24px;
+  border-top: 1px solid var(--color-hairline);
+}
+
+.cta:hover {
+  color: var(--color-accent);
 }
 
 .topic {

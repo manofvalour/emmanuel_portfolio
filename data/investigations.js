@@ -6,10 +6,11 @@ const investigations = [
     summary:
       "Built a 7-agent pipeline stacking every known technique — HyDE, multi-query, reranking, parallel generation, consensus, verification. Then benchmarked 16 configurations across 432 runs and found half of it wasn't earning its place. The winning setup is smaller than what I built.",
     tags: ['Reranker', 'HyDE', 'RAGAS eval', '432-run benchmark'],
+    repoUrl: 'https://github.com/manofvalour/Multiagent_RAG_system',
     previewChart: {
       src: '/images/rag-benchmark/pareto_frontier.png',
       alt: 'Scatter plot of median latency vs quality with a Pareto frontier line connecting non-dominated configs.',
-      caption: 'Pareto-optimal configs: D (fastest), H (middle ground), F (highest quality).',
+      caption: 'Pareto-optimal configs: D (fastest), F (middle ground), F (highest quality).',
     },
     caseStudy: {
       title: 'Benchmarking My Own Assumptions: A 7-Agent RAG System That Got Smaller After 432 Experiments',
@@ -20,6 +21,8 @@ const investigations = [
         "I built a retrieval-augmented generation system around that idea. The resulting system had seven agents. HyDE and multi-query expansion improved retrieval. A reranker narrowed the context. Multiple generators produced candidate answers. A consensus stage selected an answer, followed by verification and confidence scoring.",
         "It looked like a stronger system. I wasn't sure it was a better one. So I stopped adding components and benchmarked the architecture I had built.",
       ],
+
+      github_link: "https://github.com/manofvalour/Multiagent_RAG_system.",
 
       problem: {
         heading: 'Problem',
@@ -62,10 +65,16 @@ const investigations = [
       results: {
         heading: 'Results',
         intro: 'The three factors I varied — reranker, generators, and query expansion — had very different effects on latency, and only a marginal effect on quality:',
-        leverChart: {
-          src: '/images/rag-benchmark/per_lever_analysis.png/',
-          alt: 'Six-panel grid showing average latency, relevancy, and recall broken out by each lever independently.',
-          caption: 'Main effects: how each lever moves latency, relevancy, and recall in isolation.',
+        leverChart1: {
+            src:"/images/rag-benchmark/latency_by_lever.png",
+            alt:"Bar charts showing average latency by reranker, generators, and query expansion.",
+            caption:"Latency effect of each lever.",
+        },
+
+        leverChart2: {
+            src:"/images/rag-benchmark/quality_by_lever.png",
+            alt:"Bar charts showing average relevancy and recall by expansion, reranker, and generators.",
+            caption:"Quality effect of each lever.",
         },
 
         reranker: {
@@ -116,6 +125,7 @@ const investigations = [
             alt: 'Left: grounding grade distribution flat at 1.0. Right: faithfulness vs grounding scatter showing no relationship.',
             caption: 'Grounding judge output: flat distribution, zero correlation with RAGAS faithfulness.',
           },
+          
           rootCause: 'A parser bug: a raw digit regex was extracting digits from larger numbers, while arbitrary-format failures were coerced to the worst score.',
           lesson: "A metric can look sophisticated and still be useless. I had a custom judge, a numerical score, a seemingly objective measurement — but the pipeline underneath it was broken. I excluded grounding from the ranking. That wasn't a failure of the benchmark. Finding the broken metric was one of the results.",
         },

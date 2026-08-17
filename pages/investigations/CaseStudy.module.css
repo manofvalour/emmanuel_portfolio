@@ -86,6 +86,21 @@
   margin-bottom: 0;
 }
 
+
+.link {
+  display: inline-block;
+  font-family: var(--font-mono), monospace;
+  font-size: 12.5px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-main);
+  text-decoration: none;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
 .list {
   margin: 0 0 14px 20px;
   font-family: var(--font-serif), serif;

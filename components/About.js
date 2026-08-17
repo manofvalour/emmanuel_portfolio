@@ -16,7 +16,7 @@ export default function About() {
         ))}
 
         <div className={styles.links}>
-          <a href="#" className={styles.linkItem}>
+          <a href="/emmanuel-ajala-resume.pdf" className={styles.linkItem}>
             Resume
           </a>
           <a

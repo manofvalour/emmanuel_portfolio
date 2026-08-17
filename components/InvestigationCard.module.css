@@ -132,3 +132,28 @@
   padding-top: 14px;
   border-top: 1px solid var(--color-hairline);
 }
+
+
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.linkSecondary {
+  padding-left: 24px;
+  border-left: 1px solid var(--color-hairline);
+  display: inline-block;
+  font-family: var(--font-mono), monospace;
+  font-size: 12.5px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  text-decoration: none;
+}
+
+.linkSecondary:hover {
+  color: var(--color-main);
+  text-decoration: underline;
+}

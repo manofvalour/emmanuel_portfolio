@@ -2,7 +2,7 @@ import Link from 'next/link';
 import styles from './InvestigationCard.module.css';
 
 export default function InvestigationCard({ investigation, featured = false }) {
-  const { slug, title, subtitle, summary, tags, previewChart } = investigation;
+  const { slug, title, subtitle, summary, tags, previewChart, repoUrl } = investigation;
 
   return (
     <article className={featured ? styles.cardFeatured : styles.card}>
@@ -22,6 +22,17 @@ export default function InvestigationCard({ investigation, featured = false }) {
         <Link href={`/investigations/${slug}`} className={styles.link}>
           View full write-up →
         </Link>
+        
+          {repoUrl && (
+            <a
+              href={repoUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.linkSecondary}
+            >
+              View repository ↗
+            </a>
+          )}
 
         <p className={styles.footerLine}>
           Questions about this approach?{' '}

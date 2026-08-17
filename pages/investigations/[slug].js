@@ -32,6 +32,11 @@ export default function CaseStudyPage({ investigation }) {
             </p>
           ))}
 
+          <Link href= "https://github.com/manofvalour/Multiagent_RAG_system" className={styles.link}>
+              View the code on GitHub ↗
+              </Link>
+
+          
           <section id="problem" className={styles.section}>
             <h2 className={styles.heading}>{caseStudy.problem.heading}</h2>
             <p className={styles.body}>{caseStudy.problem.body}</p>
@@ -55,12 +60,17 @@ export default function CaseStudyPage({ investigation }) {
             <DataTable headers={caseStudy.experiment.factorsTable.headers} rows={caseStudy.experiment.factorsTable.rows} />
             <p className={styles.emphasis}>{caseStudy.experiment.workload}</p>
             <p className={styles.body}>{caseStudy.experiment.closing}</p>
+
+            <Link href= "https://github.com/manofvalour/Multiagent_RAG_system" className={styles.link}>
+              View the experiment on GitHub ↗
+            </Link>
           </section>
 
           <section id="results" className={styles.section}>
             <h2 className={styles.heading}>{caseStudy.results.heading}</h2>
             <p className={styles.body}>{caseStudy.results.intro}</p>
-            <Figure {...caseStudy.results.leverChart} />
+            <Figure {...caseStudy.results.leverChart1} />
+            <Figure {...caseStudy.results.leverChart2} />
 
             <h3 className={styles.subheading}>{caseStudy.results.reranker.heading}</h3>
             <p className={styles.body}>{caseStudy.results.reranker.body}</p>

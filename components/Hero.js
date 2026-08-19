@@ -6,32 +6,29 @@ export default function Hero() {
     <section className={styles.hero}>
       <div className={styles.container}>
         <div className={styles.copy}>
-          <p className={styles.eyebrow}>Proof Statement</p>
+          <p className={styles.status}>
+          <span className={styles.statusDot} />
+          Open to ML systems engineering roles
+          </p>
 
           <h1 className={styles.claim}>
-            A benchmark should tell the truth, not flatter a favorite.
+            I design reproducible experiments to understand ML systems.
           </h1>
 
           <p className={styles.proof}>
-            I design reproducible benchmark experiments that help ML engineers make{' '}
-            <span className={styles.emphasis}>evidence-based systems decisions</span>. Every
-            project begins with a falsifiable engineering question, controls the variables
-            that matter, and measures the trade-offs that determine which approach to use
-            under real-world constraints.
-          </p>
-          <p className={styles.proof}>
-            If your team makes engineering decisions from evidence rather
-            than intuition, I&apos;d like to contribute.
+            I help{' '} 
+            <span className={styles.emphasis}>ML engineers and AI research teams</span>{' '} 
+            test engineering choices, measure trade-offs, and decide what works.
           </p>
 
-          <p className={styles.oneLiner}>
-            A CV and LinkedIn can show what I&apos;ve studied and built — this portfolio
-            exists to make how I think observable.
+          <p className={styles.proof}>
+            If your team makes engineering decisions from evidence rather than intuition,
+            I&apos;d like to contribute.
           </p>
 
           <div className={styles.ctaRow}>
             <Link href="/#work" className={styles.cta}>
-              View the work →
+              View my Investigations →
             </Link>
           </div>
         </div>
@@ -62,16 +59,19 @@ export default function Hero() {
             </text>
 
             {/* Pareto frontier: D → H → F, in order of increasing latency */}
-            <path d="M 68 145 L 78 138 L 130 55" fill="none" stroke="var(--color-main)" strokeWidth="1.5" strokeDasharray="3 3" />
+            <path d="M 55 155 L 95 120 L 130 55" fill="none" stroke="var(--color-main)" strokeWidth="1.5" strokeDasharray="3 3" />
 
             {/* Off-frontier configs */}
             <circle cx="185" cy="98" r="4" fill="var(--color-muted)" />
             <circle cx="220" cy="128" r="4" fill="var(--color-muted)" />
             <circle cx="320" cy="105" r="4" fill="var(--color-muted)" />
+            <circle cx="210" cy="110" r="4" fill="var(--color-muted)" />
+            <circle cx="295" cy="95" r="4" fill="var(--color-muted)" />
 
             {/* Frontier: D, H */}
-            <circle cx="68" cy="145" r="4" fill="var(--color-main)" />
-            <circle cx="78" cy="138" r="4" fill="var(--color-main)" />
+            <circle cx="55" cy="155" r="4" fill="var(--color-main)" />
+            <circle cx="68" cy="148" r="4" fill="var(--color-main)" />
+            <circle cx="95" cy="120" r="4" fill="var(--color-main)" />
 
             {/* Winner: F */}
             <circle cx="130" cy="55" r="5.5" fill="var(--color-accent)" stroke="var(--color-bg)" strokeWidth="1.5" />
@@ -83,7 +83,7 @@ export default function Hero() {
 
           <p className={styles.panelCaption}>
             <b>Controlled:</b> reranker, generator count, query expansion. <b>Measured:</b>{' '}
-            432 runs across 16 configurations — full case study below.
+            432 x 3 runs across 16 configurations — full case study below.
           </p>
         </div>
       </div>

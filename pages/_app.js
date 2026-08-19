@@ -12,14 +12,14 @@ const plexSans = IBM_Plex_Sans({
 
 const plexSerif = IBM_Plex_Serif({
   subsets: ['latin'],
-  weight: '400',
+  weight: ['400', '500'],
   variable: '--font-serif',
   display: 'swap',
 });
 
 const plexMono = IBM_Plex_Mono({
   subsets: ['latin'],
-  weight: ['400', '500'],
+  weight: ['400', '500', '600'],
   variable: '--font-mono',
   display: 'swap',
 });
@@ -28,7 +28,9 @@ export default function App({ Component, pageProps }) {
   return (
     <div className={`${plexSans.variable} ${plexSerif.variable} ${plexMono.variable}`}>
       <Header />
-      <Component {...pageProps} />
+      <main>
+        <Component {...pageProps} />
+      </main>
       <Footer />
     </div>
   );

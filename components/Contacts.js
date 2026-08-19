@@ -48,7 +48,6 @@ export default function Contact() {
   return (
     <section id="contact" className={styles.contact}>
       <div className={styles.container}>
-        <p className={styles.eyebrow}>Contact</p>
         <h2 className={styles.heading}>Let&apos;s talk trade-offs</h2>
         <p className={styles.body}>
           If your team makes engineering decisions from evidence rather than intuition,

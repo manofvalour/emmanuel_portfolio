@@ -8,7 +8,6 @@ export default function Work() {
   return (
     <section id="work" className={styles.work}>
       <div className={styles.container}>
-        <p className={styles.eyebrow}>Selected Work</p>
         <h2 className={styles.heading}>Investigations</h2>
 
         {featured && (

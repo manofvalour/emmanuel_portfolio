@@ -1,5 +1,4 @@
 const about = {
-  eyebrow: 'About',
   heading: 'Early, but evidence-first',
   paragraphs: [
     "I'm early in my move into ML systems engineering. Before this, I worked as a technical content writer — which meant my job was taking complex systems and making them clear enough that someone else could reason about them, act on them, trust them.",
@@ -7,7 +6,9 @@ const about = {
     "This portfolio is that habit, made visible. I'd rather show you a benchmark that overturned four of my own assumptions than tell you I'm passionate about AI.",
   ],
   currentlyLabel: 'Currently digging into',
-  currentTopics: ['Distributed Training (DDP/FSDP/ZeRO/Pipeline/Tensor Parallelism)', 'Inference Optimization (KV Cache, Fine-tuning, Quantization)', 'Retrieval Systems'],
+  currentTopics: ['Distributed Training and Inferencing', 'Inference Optimization (Quantization)', 'Retrieval Systems (RAGs)'],
+  toolsLabel: 'Tools I use',
+  tools: ['Python', 'PyTorch', 'TensorFlow', 'HuggingFace Transformer', 'Docker'],
 };
 
 export default about;

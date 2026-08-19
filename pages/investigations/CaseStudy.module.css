@@ -86,6 +86,17 @@
   margin-bottom: 0;
 }
 
+.callout {
+  background: var(--color-bg-tint);
+  border-left: 2px solid var(--color-accent);
+  border-radius: 3px;
+  padding: 24px 28px;
+  margin: 32px 0;
+  font-family: var(--font-serif), serif;
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--color-text);
+}
 
 .link {
   display: inline-block;

@@ -47,6 +47,8 @@ export default function InvestigationCard({ investigation, featured = false }) {
           <img
             src={previewChart.src}
             alt={previewChart.alt}
+            width={480}
+            height={320}
             className={styles.chartImage}
           />
           <p className={styles.chartCaption}>{previewChart.caption}</p>

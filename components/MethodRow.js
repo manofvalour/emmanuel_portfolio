@@ -28,7 +28,7 @@ export default function MethodRow() {
         {steps.map((step) => (
           <div key={step.tag} className={`${styles.step} ${step.active ? styles.active : ''}`}>
             <p className={styles.tag}>{step.tag}</p>
-            <h3 className={styles.title}>{step.title}</h3>
+            <h2 className={styles.title}>{step.title}</h2>
             <p className={styles.description}>{step.description}</p>
           </div>
         ))}

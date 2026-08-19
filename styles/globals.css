@@ -1,8 +1,8 @@
 :root {
   --color-main: #22314A;
   --color-text: #121417;
-  --color-bg: #F7F6F3;
-  --color-bg-tint: #EDEBE3;
+  --color-bg: #FAF6F0;
+  --color-bg-tint: #F0EBE0;
   --color-hairline: #DEDAD0;
   --color-muted: #6B6862;
   --color-accent: #B08D57;
@@ -29,6 +29,7 @@ body {
   color: var(--color-text);
   font-family: var(--font-serif), Georgia, serif;
   font-size: 16px;
+  font-weight: 500;
   line-height: 1.65;
   transition: background-color 0.2s ease, color 0.2s ease;
 }

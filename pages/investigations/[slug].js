@@ -5,6 +5,7 @@ import DataTable from '../../components/DataTable';
 import Figure from '../../components/Figure';
 import TableOfContents from '../../components/TableOfContents';
 import styles from './CaseStudy.module.css';
+import Head from 'next/head';
 
 export default function CaseStudyPage({ investigation }) {
   const router = useRouter();
@@ -17,6 +18,11 @@ export default function CaseStudyPage({ investigation }) {
 
   return (
     <article className={styles.page}>
+      <Head>
+        <title>{caseStudy.title} — Emmanuel Ajala</title>
+        <meta name="description" content={investigation.metaDescription} />
+      </Head>
+      
       <div className={styles.layout}>
         <div className={styles.content}>
           <Link href="/" className={styles.back}>
@@ -74,6 +80,12 @@ export default function CaseStudyPage({ investigation }) {
 
             <h3 className={styles.subheading}>{caseStudy.results.reranker.heading}</h3>
             <p className={styles.body}>{caseStudy.results.reranker.body}</p>
+            {caseStudy.results.reranker.callout && (
+              <p className={styles.callout}>{caseStudy.results.reranker.callout}</p>
+            )}
+            {caseStudy.results.reranker.body2 && (
+              <p className={styles.body}>{caseStudy.results.reranker.body2}</p>
+            )}
             <DataTable headers={caseStudy.results.reranker.table.headers} rows={caseStudy.results.reranker.table.rows} />
             <p className={styles.body}>{caseStudy.results.reranker.explanation}</p>
             <Figure {...caseStudy.results.reranker.chart} />
@@ -97,8 +109,19 @@ export default function CaseStudyPage({ investigation }) {
             <h3 className={styles.subheading}>{caseStudy.results.hallucinationRisk.heading}</h3>
             <p className={styles.body}>{caseStudy.results.hallucinationRisk.body}</p>
             <p className={styles.body}>{caseStudy.results.hallucinationRisk.example}</p>
+            {caseStudy.results.hallucinationRisk.pattern && (
+              <p className={styles.body}>{caseStudy.results.hallucinationRisk.pattern}</p>
+            )}
             <Figure {...caseStudy.results.hallucinationRisk.chart} />
             <p className={styles.emphasis}>{caseStudy.results.hallucinationRisk.closing}</p>
+
+            {caseStudy.results.noiseGate && (
+              <>
+                <h3 className={styles.subheading}>{caseStudy.results.noiseGate.heading}</h3>
+                <p className={styles.body}>{caseStudy.results.noiseGate.body}</p>
+                <p className={styles.emphasis}>{caseStudy.results.noiseGate.note}</p>
+              </>
+            )}
           </section>
 
           <section id="winner" className={styles.section}>

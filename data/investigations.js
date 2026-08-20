@@ -2,6 +2,8 @@ const investigations = [
   {
     slug: 'multi-agent-rag-benchmark',
     title: 'Multi-Agent RAG System',
+    
+    ogImage: 'https://emmanuelajala.netlify.app/images/rag-benchmark/pareto_frontier.webp',
     subtitle: 'Reducing hallucination in retrieval-augmented generation',
     metaDescription: "A controlled benchmark of RAG configurations — reranking, query expansion, and generation strategies — measured against a composite quality metric to find what actually wins.",
     summary:

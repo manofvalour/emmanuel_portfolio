@@ -21,6 +21,12 @@ export default function CaseStudyPage({ investigation }) {
       <Head>
         <title>{caseStudy.title} — Emmanuel Ajala</title>
         <meta name="description" content={investigation.metaDescription} />
+        <meta property="og:title" content={`${caseStudy.title} — Emmanuel Ajala`} />
+        <meta property="og:description" content={investigation.metaDescription} />
+        <meta property="og:image" content={investigation.ogImage} />
+        <meta property="og:url" content={`https://emmanuelajala.netlify.app/investigations/${investigation.slug}`} />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary_large_image" />
       </Head>
       
       <div className={styles.layout}>

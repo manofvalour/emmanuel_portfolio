@@ -13,7 +13,7 @@ export default function Home() {
         <title>Emmanuel Ajala — ML Systems Engineering</title>
         <meta
           name="description"
-          content="Reproducible benchmark experiments for ML systems. I test engineering choices, measure trade-offs, and use evidence to understand what works."
+          content="I design reproducible benchmark experiments for ML systems. I test engineering choices, measure trade-offs, and use evidence to understand what works."
         />
           <meta property="og:title" content="Emmanuel Ajala — ML Systems Engineering" />
           <meta property="og:description" content="Reproducible benchmark experiments for ML systems. I test engineering choices, measure trade-offs, and use evidence to understand what works." />
